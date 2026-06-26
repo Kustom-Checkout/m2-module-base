@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -9,7 +10,7 @@
 namespace Klarna\Base\Test\Unit\Helper\Debug;
 
 use Klarna\Base\Helper\Debug\DebugDataObject;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Klarna\Base\Test\Unit\Mock\TestCase;
 
 /**
@@ -22,6 +23,7 @@ class DebugDataObjectTest extends TestCase
      */
     private object $debugDataObject;
 
+    #[DataProvider('dataProviderForTestCanSetAndRetrieveTheData')]
     /**
      * @dataProvider dataProviderForTestCanSetAndRetrieveTheData
      */
@@ -35,7 +37,7 @@ class DebugDataObjectTest extends TestCase
         static::assertSame($expected, $this->debugDataObject->getData());
     }
 
-    public function dataProviderForTestCanSetAndRetrieveTheData(): array
+    public static function dataProviderForTestCanSetAndRetrieveTheData(): array
     {
         return [
             [

@@ -22,13 +22,6 @@ use PHPUnit\Framework\TestCase;
 class ScopeMocker extends TestCase
 {
     /**
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        parent::__construct('');
-    }
-    /**
      * Creates a mock Store object and returns it
      *
      * @param string $storeName

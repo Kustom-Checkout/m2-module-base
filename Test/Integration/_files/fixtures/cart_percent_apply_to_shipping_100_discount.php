@@ -6,7 +6,6 @@
 declare(strict_types=1);
 
 use Magento\Customer\Model\GroupManagement;
-use Magento\SalesRule\Model\ResourceModel\Rule as RuleResourceModel;
 use Magento\SalesRule\Model\Rule;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -32,4 +31,4 @@ $salesRule->setData(
         'website_ids' => [$websiteId]
     ]
 );
-$objectManager->get(RuleResourceModel::class)->save($salesRule);
+$salesRule->save();

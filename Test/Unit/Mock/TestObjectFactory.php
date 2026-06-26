@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Klarna\Base\Test\Unit\Mock;
@@ -19,6 +21,10 @@ use PHPUnit\Framework\TestCase;
  * use to run the tests against. Automatically finds and sets up
  * mocks for all class dependencies.
  *
+ * TODO: We should eventually get rid of this abstraction, it doesn't make sense to extend TestCase just for getMockBuilder
+ * Increased complexity also in the longer run to maintain tests, when PHPUnit and by extension Magento Testing Framework
+ * will change.
+ *
  * @internal
  */
 class TestObjectFactory extends TestCase
@@ -26,23 +32,7 @@ class TestObjectFactory extends TestCase
     /**
      * @var array
      */
-    private $dependencyMocks;
-
-    /**
-     * @var \Klarna\Base\Test\Unit\Mock\MockFactory
-     */
-    private $mockFactory;
-
-    /**
-     * @param MockFactory $mockFactory
-     * @codeCoverageIgnore
-     */
-    public function __construct(MockFactory $mockFactory)
-    {
-        parent::__construct('');
-        $this->dependencyMocks = [];
-        $this->mockFactory = $mockFactory;
-    }
+    private $dependencyMocks = [];
 
     /**
      * Reflects over the given class to find and insert all dependencies
@@ -58,6 +48,8 @@ class TestObjectFactory extends TestCase
      */
     public function create(string $className, array $methodsToMock = [], array $instanceMocks = [])
     {
+        $mockFactory = new MockFactory($this);
+
         try {
             $objectManagerHelper = new ObjectManager($this);
 
@@ -74,11 +66,11 @@ class TestObjectFactory extends TestCase
                 $params = $constructor->getParameters();
 
                 foreach ($params as $param) {
-                    if ($this->isObject($param->getType())) {
+                    if ($this->isParamObject($param->getType())) {
                         $paramClass = $param->getType()->getName();
 
                         $paramMockMethods = $this->getParamMockMethods($methodsToMock, $paramClass);
-                        $dependencyMock = $this->mockFactory->create($paramClass, $paramMockMethods);
+                        $dependencyMock = $mockFactory->create($paramClass, $paramMockMethods);
                         if (isset($instanceMocks[$paramClass])) {
                             $dependencyMock = $instanceMocks[$paramClass];
                         }
@@ -103,7 +95,7 @@ class TestObjectFactory extends TestCase
      * @param null|\ReflectionNamedType $type
      * @return bool
      */
-    private function isObject($type): bool
+    private function isParamObject($type): bool
     {
         return $type instanceof \ReflectionNamedType && !in_array($type->getName(), ['array', 'string']);
     }

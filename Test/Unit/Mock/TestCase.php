@@ -45,7 +45,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->mockFactory = new MockFactory($this);
         }
 
-        $this->objectFactory = new TestObjectFactory($this->mockFactory);
+        $this->objectFactory = new TestObjectFactory('');
 
         $instance = $this->objectFactory->create($class, $methodsToMock, $instanceMocks);
         $this->dependencyMocks = $this->objectFactory->getDependencyMocks();

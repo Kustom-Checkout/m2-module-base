@@ -9,11 +9,9 @@
 
 declare(strict_types=1);
 
-use Magento\Backend\App\Action\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\Data\Form\FormKey;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Customer\Model\CustomerFactory;
@@ -26,39 +24,41 @@ Resolver::getInstance()->requireDataFixture('Klarna_Base::Test/Integration/_file
 
 $objectManager = Bootstrap::getObjectManager();
 
+/** @var StoreManagerInterface $storeManager */
 $storeManager = $objectManager->get(StoreManagerInterface::class);
+/** @var Product $productLoader */
 $productLoader = $objectManager->get(Product::class);
-$formkey = $objectManager->get(FormKey::class);
-$quote = $objectManager->get(QuoteFactory::class);
+/** @var QuoteFactory $mQuoteFactory */
+$mQuoteFactory = $objectManager->get(QuoteFactory::class);
+/** @var QuoteManagement $quoteManagement */
 $quoteManagement = $objectManager->get(QuoteManagement::class);
+/** @var CustomerFactory $customerFactory */
 $customerFactory = $objectManager->get(CustomerFactory::class);
+/** @var CustomerRepositoryInterface $customerRepository */
 $customerRepository = $objectManager->get(CustomerRepositoryInterface::class);
+/** @var \Klarna\Kco\Model\QuoteFactory $kQuoteFactory */
+$kQuoteFactory = $objectManager->create(\Klarna\Kco\Model\QuoteFactory::class);
 
-$product = $productLoader->load(99999);
 $store = $storeManager->getStore();
 $websiteId = $storeManager->getStore()->getWebsiteId();
-// Start New Sales Order Quote
-$quote= $quote->create(); //Create object of quote
-$quote->setStore($store); //set store for which you create quote
-// Set Sales Order Quote Currency
+$customer = $customerFactory->create();
+$customer->setWebsiteId($websiteId)
+    ->setStore($store)
+    ->setFirstname('Jhon')
+    ->setLastname('Deo')
+    ->setEmail('sdfds@sdfsd.de')
+    ->setPassword("password");
+$customer->save();
+$customer = $customerRepository->getById($customer->getEntityId());
 
-    $customer = $customerFactory->create();
-    $customer->setWebsiteId($websiteId)
-        ->setStore($store)
-        ->setFirstname('Jhon')
-        ->setLastname('Deo')
-        ->setEmail('sdfds@sdfsd.de')
-        ->setPassword("password");
-    $customer->save();
-$customer= $customerRepository->getById($customer->getEntityId());
-$quote->setGlobalCurrencyCode("USD")
-    ->setBaseCurrencyCode("USD")
-    ->setStoreCurrencyCode("USD")
-    ->setQuoteCurrencyCode("USD");
-// Assign Customer To Sales Order Quote
+$product = $productLoader->load(99999);
+$quote = $mQuoteFactory->create();
+$quote->setStore($store);
+$quote->setGlobalCurrencyCode('USD')
+    ->setBaseCurrencyCode('USD')
+    ->setStoreCurrencyCode('USD')
+    ->setQuoteCurrencyCode('USD');
 $quote->assignCustomer($customer);
-
-// Configure Notification
 $quote->setSendConfirmation(1);
 $quote->addProduct($product, 1);
 
@@ -71,34 +71,31 @@ $addressData = [
     AddressInterface::KEY_STREET => 'Green str, 67',
     AddressInterface::KEY_LASTNAME => 'Smith',
     AddressInterface::KEY_FIRSTNAME => 'John',
-    AddressInterface::KEY_REGION_ID => 1,
+    AddressInterface::KEY_REGION => 'CA',
+    AddressInterface::KEY_REGION_ID => '12',
     AddressInterface::KEY_EMAIL => 'any_mail@mail.me'
 ];
 
-// Set Sales Order Billing Address
 $billingAddress = $quote->getBillingAddress()->addData($addressData);
-
-// Set Sales Order Shipping Address
 $shippingAddress = $quote->getShippingAddress()->addData($addressData);
 
-// Collect Rates and Set Shipping & Payment Method
 $shippingAddress->setCollectShippingRates(true)
     ->collectShippingRates()
     ->setShippingMethod('flatrate_flatrate')
     ->setPaymentMethod('checkmo');
-$quote->setPaymentMethod('checkmo'); //payment method
-$quote->setInventoryProcessed(false); //not effetc inventory
-$quote->save(); //Now Save quote and your quote is ready
-// Set Sales Order Payment
+$quote->setPaymentMethod('checkmo');
+$quote->setInventoryProcessed(false);
+$quote->save();
 $quote->getPayment()->importData(array('method' => 'checkmo'));
 
 $quote->setReservedOrderId('100000001');
 
-// Collect Totals & Save Quote
 $quote->setTotalsCollectedFlag(false);
 $quote->getShippingAddress()->setCollectShippingRates(true);
 $quote->collectTotals()->save();
 
-// Create Order From Quote
-$service = $quoteManagement->submit($quote);
-$increment_id = $service->getRealOrderId();
+$klarnaQuote = $kQuoteFactory->create();
+$klarnaQuote->setQuoteId($quote->getId());
+$klarnaQuote->setKlarnaCheckoutId('123456-1234-1234-1234-1234567890');
+$klarnaQuote->setIsActive(true);
+$klarnaQuote->save();

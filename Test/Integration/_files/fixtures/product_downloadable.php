@@ -4,11 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-use Magento\Downloadable\Api\DomainManagerInterface;
-
 $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
-$domainManager = $objectManager->get(DomainManagerInterface::class);
-$domainManager->addDomains(['placeholder.test']);
 
 /** @var \Magento\Catalog\Model\Product $product */
 $product = $objectManager->create(\Magento\Catalog\Model\Product::class);
@@ -41,7 +37,7 @@ $linkData = [
     'title' => 'Downloadable Product Link',
     'type' => \Magento\Downloadable\Helper\Download::LINK_TYPE_URL,
     'is_shareable' => \Magento\Downloadable\Model\Link::LINK_SHAREABLE_CONFIG,
-    'link_url' => 'http://placeholder.test',
+    'link_url' => 'http://localhost',
     'link_id' => 0,
     'is_delete' => null,
 ];

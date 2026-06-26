@@ -157,7 +157,7 @@ class KlarnaTest extends TestCase
             ->method('getAppState')
             ->willReturn($appState);
 
-        $objectFactory = new TestObjectFactory($this->mockFactory);
+        $objectFactory = new TestObjectFactory('');
         $this->klarna = $objectFactory->create(
             Klarna::class,
             [],

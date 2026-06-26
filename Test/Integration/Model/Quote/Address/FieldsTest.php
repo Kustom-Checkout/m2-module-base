@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -6,14 +7,15 @@
  * and LICENSE files that were distributed with this source code.
  */
 
-namespace Klarna\Base\Test\Unit\Model\Quote\Address;
+declare(strict_types=1);
+
+namespace Klarna\Base\Test\Integration\Model\Quote\Address;
 
 use Klarna\Base\Model\Quote\Address\Fields;
-use Magento\Directory\Model\Region as RegionDirectory;
-use Magento\Framework\Api\SimpleDataObjectConverter;
-use Magento\Framework\DataObject;
-use Klarna\Base\Test\Unit\Mock\TestCase;
-use Magento\Framework\DataObjectFactory;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Klarna\Base\Model\Quote\Address\Fields
@@ -21,10 +23,25 @@ use Magento\Framework\DataObjectFactory;
 class FieldsTest extends TestCase
 {
     /**
-     * @var Fields
+     * @var ObjectManagerInterface|null
      */
-    private Fields $model;
+    private ?ObjectManagerInterface $objectManager = null;
 
+    /**
+     * @var Fields|null
+     */
+    private ?Fields $model = null;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        $this->objectManager = Bootstrap::getObjectManager();
+        $this->model = $this->objectManager->create(Fields::class);
+    }
+
+    #[DataProvider('differentAddressInputDataProvider')]
     /**
      * @dataProvider differentAddressInputDataProvider
      *
@@ -36,17 +53,11 @@ class FieldsTest extends TestCase
         $klarnaAddressInput,
         $expected
     ): void {
-        $dataObject = $this->mockFactory->create(DataObject::class, [], array_keys($klarnaAddressInput));
-        foreach ($klarnaAddressInput as $title => $value) {
-            $dataObject->method($title)->willReturn($value);
-        }
-        $this->dependencyMocks['dataObjectFactory']->method('create')->willReturn($dataObject);
-
         $data = $this->model->getQuoteAddressFieldsByKlarnaAddress($klarnaAddressInput);
-
         $this->assertSame($expected, $data);
     }
 
+    #[DataProvider('addressInputDataProviderWithStreetAddress2')]
     /**
      * @dataProvider addressInputDataProviderWithStreetAddress2
      *
@@ -58,44 +69,27 @@ class FieldsTest extends TestCase
         $klarnaAddressInput,
         $expected
     ): void {
-
-        $mock = $this->getMockBuilder(DataObject::class);
-        $mock->disableOriginalConstructor();
-
-        $mock->onlyMethods(['getData']);
-        $addMethods = $klarnaAddressInput;
-        unset($addMethods['getData']);
-
-        $mock->addMethods(array_keys($addMethods));
-        $dataObject = $mock->getMock();
-
-        foreach ($klarnaAddressInput as $title => $value) {
-            $dataObject->method($title)->willReturn($value);
-        }
-        $this->dependencyMocks['dataObjectFactory']->method('create')->willReturn($dataObject);
-
         $data = $this->model->getQuoteAddressFieldsByKlarnaAddress($klarnaAddressInput);
-
         $this->assertSame($expected, $data);
     }
 
-    public function addressInputDataProviderWithStreetAddress2(): array
+    public static function addressInputDataProviderWithStreetAddress2(): array
     {
         $basicAddressInput = [
-            'getGivenName' => 'my firstname',
-            'getFamilyName' => 'my lastname',
-            'getCountry' => 'DE',
-            'getEmail' => 'myEmailAddress@klarna.com',
-            'getOrganizationName' => 'Klarna',
-            'getTitle' => 'Mr.',
-            'getStreetAddress' => 'my street address',
-            'getHouseExtension' => '10',
-            'getData' => 'my street address 2',
-            'getRamin' => 'my ramin',
-            'getPostalCode' => '10101',
-            'getCity' => 'BE',
-            'getRegion' => 'BE',
-            'getPhone' => '+491111111111',
+            'given_name' => 'my firstname',
+            'family_name' => 'my lastname',
+            'country' => 'DE',
+            'email' => 'myEmailAddress@klarna.com',
+            'organization_name' => 'Klarna',
+            'title' => 'Mr.',
+            'street_address' => 'my street address',
+            'house_extension' => '10',
+            'street_address2' => 'my street address 2',
+            'ramin' => 'my ramin',
+            'postal_code' => '10101',
+            'city' => 'BE',
+            'region' => 'BE',
+            'phone' => '+491111111111',
         ];
 
         $basicExpectedOutput = [
@@ -110,7 +104,7 @@ class FieldsTest extends TestCase
             ],
             'postcode' => '10101',
             'city' => 'BE',
-            'region_id' => 20,
+            'region_id' => 0,
             'region' => 'BE',
             'telephone' => '+491111111111',
             'country_id' => 'DE',
@@ -124,22 +118,22 @@ class FieldsTest extends TestCase
         ];
     }
 
-    public function differentAddressInputDataProvider(): array
+    public static function differentAddressInputDataProvider(): array
     {
         $basicAddressInput = [
-            'getGivenName' => 'my firstname',
-            'getFamilyName' => 'my lastname',
-            'getCountry' => 'DE',
-            'getEmail' => 'myEmailAddress@klarna.com',
-            'getOrganizationName' => 'Klarna',
-            'getTitle' => 'Mr.',
-            'getStreetAddress' => 'my street address',
-            'getHouseExtension' => '10',
-            'getRamin' => 'my ramin',
-            'getPostalCode' => '10101',
-            'getCity' => 'BE',
-            'getRegion' => 'BE',
-            'getPhone' => '+491111111111',
+            'given_name' => 'my firstname',
+            'family_name' => 'my lastname',
+            'country' => 'DE',
+            'email' => 'myEmailAddress@klarna.com',
+            'organization_name' => 'Klarna',
+            'title' => 'Mr.',
+            'street_address' => 'my street address',
+            'house_extension' => '10',
+            'ramin' => 'my ramin',
+            'postal_code' => '10101',
+            'city' => 'BE',
+            'region' => 'BE',
+            'phone' => '+491111111111',
         ];
 
         $basicExpectedOutput = [
@@ -153,28 +147,26 @@ class FieldsTest extends TestCase
             ],
             'postcode' => '10101',
             'city' => 'BE',
-            'region_id' => 20,
+            'region_id' => 0,
             'region' => 'BE',
             'telephone' => '+491111111111',
             'country_id' => 'DE',
         ];
 
         $addressInputContainsDOB = array_merge($basicAddressInput, [
-            'hasCustomerDOB' => true,
-            'getCustomerDOB' => '02/02/2002',
+            'customer_dob' => '02/02/2002',
         ]);
         $expectedOutputContainsDOB = array_merge($basicExpectedOutput, ['dob' => '02/02/2002']);
 
         $addressInputContainsGender = array_merge($basicAddressInput, [
-            'hasCustomerGender' => true,
-            'getCustomerGender' => 'male'
+            'customer_gender' => 'male'
         ]);
         $expectedOutputContainsGender = array_merge($basicExpectedOutput, ['gender' => 'male']);
 
         $addressInputContainsSomeMissingValues = $basicAddressInput;
         unset(
-            $addressInputContainsSomeMissingValues['getGivenName'],
-            $addressInputContainsSomeMissingValues['getEmail']
+            $addressInputContainsSomeMissingValues['given_name'],
+            $addressInputContainsSomeMissingValues['email']
         );
 
         $expectedSomeMissingValues = array_merge($basicExpectedOutput, ['firstname' => null, 'email' => null]);
@@ -197,18 +189,5 @@ class FieldsTest extends TestCase
                 $expectedSomeMissingValues,
             ]
         ];
-    }
-
-    protected function setUp(): void
-    {
-        $this->model = parent::setUpMocks(Fields::class);
-
-        $regionDirectory = $this->mockFactory->create(
-            RegionDirectory::class,
-            ['loadByCode', 'getId']
-        );
-        $regionDirectory->method('loadByCode')->willReturn($regionDirectory);
-        $regionDirectory->method('getId')->willReturn('20');
-        $this->dependencyMocks['regionFactory']->method('create')->willReturn($regionDirectory);
     }
 }

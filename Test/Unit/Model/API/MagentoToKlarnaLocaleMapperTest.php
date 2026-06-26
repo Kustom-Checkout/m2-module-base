@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Klarna Bank AB (publ)
  *
@@ -11,6 +12,7 @@ namespace Klarna\Base\Test\Unit\Model\Api;
 use Klarna\Base\Model\Api\MagentoToKlarnaLocaleMapper;
 use Klarna\Base\Test\Unit\Mock\MockFactory;
 use Magento\Framework\Locale\ResolverInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Magento\Store\Model\Store;
 
@@ -25,6 +27,7 @@ class MagentoToKlarnaLocaleMapperTest extends TestCase
      */
     private Store $store;
 
+    #[DataProvider('localeDataProvider')]
     /**
      * @dataProvider localeDataProvider
      *
@@ -46,7 +49,7 @@ class MagentoToKlarnaLocaleMapperTest extends TestCase
      *
      * @return array
      */
-    public function localeDataProvider(): array
+    public static function localeDataProvider(): array
     {
         return [
             // should map nb_no to no-NO since Klarna API still using RFC1766

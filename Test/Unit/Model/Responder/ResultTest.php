@@ -51,7 +51,7 @@ class ResultTest extends TestCase
     protected function setUp(): void
     {
         $mockFactory = new MockFactory($this);
-        $objectFactory = new TestObjectFactory($mockFactory);
+        $objectFactory = new TestObjectFactory('');
 
         $this->result = $objectFactory->create(Result::class);
         $this->dependencyMocks = $objectFactory->getDependencyMocks();

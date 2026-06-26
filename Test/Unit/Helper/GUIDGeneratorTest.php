@@ -6,12 +6,12 @@
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Klarna\Base\Test\Unit\Helper;
 
 use Klarna\Base\Helper\GUIDGenerator;
-use Klarna\Base\Test\Unit\Mock\MockFactory;
 use Klarna\Base\Test\Unit\Mock\TestObjectFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -65,8 +65,7 @@ class GUIDGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
-        $mockFactory = new MockFactory($this);
-        $objectFactory = new TestObjectFactory($mockFactory);
+        $objectFactory = new TestObjectFactory('');
 
         $this->guidGenerator = $objectFactory->create(GUIDGenerator::class);
         $this->guid = $this->guidGenerator->generateGUID();

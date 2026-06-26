@@ -100,7 +100,7 @@ if ($product->getBundleOptionsData()) {
     $product->setExtensionAttributes($extension);
 }
 
-$productRepository->save($product, true);
+$product = $productRepository->save($product, true);
 
 $productHelper = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(\Magento\Catalog\Helper\Product::class);
 $productHelper->setSkipSaleableCheck(true);
