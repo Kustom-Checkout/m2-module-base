@@ -243,7 +243,7 @@ class Klarna extends Info
      */
     public function getLogoUrl(): string
     {
-        return 'https://x.klarnacdn.net/payment-method/assets/badges/generic/white/klarna.png?width=300';
+        return 'https://cdn.kustom.co/assets/badges/kustom_logo_black.png';
     }
 
     /**

@@ -42,7 +42,7 @@ class KlarnaTest extends TestCase
     {
         $this->setUpKlarna('adminhtml');
 
-        $expected = 'https://x.klarnacdn.net/payment-method/assets/badges/generic/white/klarna.png?width=300';
+        $expected = 'https://cdn.kustom.co/assets/badges/kustom_logo_black.png';
         $result = $this->klarna->getLogoUrl();
 
         static::assertEquals($expected, $result);

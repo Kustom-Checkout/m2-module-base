@@ -13,7 +13,7 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Magento_Backend::system">
-                    <resource id="Klarna_Base::resource" title="Klarna" sortOrder="10" />
+                    <resource id="Klarna_Base::resource" title="Kustom" sortOrder="10" />
                 </resource>
             </resource>
         </resources>
