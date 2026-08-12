@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -138,6 +138,15 @@ class KlarnaTest extends TestCase
         $klarnaOrder
             ->method('getAuthorizedPaymentMethod')
             ->willReturn('direct_debit');
+        $klarnaOrder
+            ->method('getTosId')
+            ->willReturn('tos-id-123');
+        $klarnaOrder
+            ->method('getShippingCarrier')
+            ->willReturn('ingrid');
+        $klarnaOrder
+            ->method('getShippingLocationName')
+            ->willReturn(null);
     }
 
     /**

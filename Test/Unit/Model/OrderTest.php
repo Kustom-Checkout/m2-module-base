@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -114,6 +114,54 @@ class OrderTest extends TestCase
         $value = 'direct_debit';
 
         $result = $this->model->setAuthorizedPaymentMethod($value)->getAuthorizedPaymentMethod();
+        $this->assertEquals($value, $result);
+    }
+
+    /**
+     * @covers ::getTosId()
+     * @covers ::setTosId()
+     */
+    public function testTosIdAccessors(): void
+    {
+        $value = 'tos-id-123';
+
+        $result = $this->model->setTosId($value)->getTosId();
+        $this->assertEquals($value, $result);
+    }
+
+    /**
+     * @covers ::getShippingCarrier()
+     * @covers ::setShippingCarrier()
+     */
+    public function testShippingCarrierAccessors(): void
+    {
+        $value = 'ingrid';
+
+        $result = $this->model->setShippingCarrier($value)->getShippingCarrier();
+        $this->assertEquals($value, $result);
+    }
+
+    /**
+     * @covers ::getShippingLocationName()
+     * @covers ::setShippingLocationName()
+     */
+    public function testShippingLocationNameAccessors(): void
+    {
+        $value = '7-Eleven Main St';
+
+        $result = $this->model->setShippingLocationName($value)->getShippingLocationName();
+        $this->assertEquals($value, $result);
+    }
+
+    /**
+     * @covers ::getSelectedShippingOption()
+     * @covers ::setSelectedShippingOption()
+     */
+    public function testSelectedShippingOptionAccessors(): void
+    {
+        $value = '{"id":"shipping-1"}';
+
+        $result = $this->model->setSelectedShippingOption($value)->getSelectedShippingOption();
         $this->assertEquals($value, $result);
     }
 
