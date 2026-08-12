@@ -13,6 +13,7 @@ use Klarna\Base\Model\Order as KlarnaOrder;
 use Klarna\Base\Plugin\Sales\OrderRepositoryPlugin;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -48,7 +49,7 @@ class OrderRepositoryPluginTest extends TestCase
 
         $this->klarnaOrderRepository->method('getByOrder')->willReturn($klarnaOrder);
 
-        $extensionAttributes = $this->createMock(\Magento\Sales\Api\Data\OrderExtension::class);
+        $extensionAttributes = $this->createMock(OrderExtensionInterface::class);
 
         $extensionAttributes->expects(static::once())->method('setKustomTosId')->with('tos-id-123');
         $extensionAttributes->expects(static::once())->method('setKustomShippingCarrier')->with('ingrid');
