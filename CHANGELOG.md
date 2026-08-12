@@ -1,5 +1,19 @@
 # Changelog
 
+## 11.1.1 / 2026-08-12
+
+### Breaking changes
+
+* None
+
+### Features / changes
+
+* None
+
+### Fixes
+
+* KUSTOM-6: Hyvä theme compatibility support
+
 ## 11.1.0 / 2026-06-24
 
 ### Breaking changes
