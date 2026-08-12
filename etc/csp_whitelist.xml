@@ -14,6 +14,7 @@
                 <value id="klarna_evt" type="host">*.klarnaevt.com</value>
                 <value id="klarna_cdn" type="host">*.klarnacdn.net</value>
                 <value id="x_klarna_cdn" type="host">x.klarnacdn.net</value>
+                <value id="kustom_co" type="host">*.kustom.co</value>
             </values>
         </policy>
         <policy id="script-src">
@@ -21,6 +22,7 @@
                 <value id="klarna" type="host">*.klarna.com</value>
                 <value id="klarna_cdn" type="host">*.klarnacdn.net</value>
                 <value id="x_klarna_cdn" type="host">x.klarnacdn.net</value>
+                <value id="kustom_co" type="host">*.kustom.co</value>
             </values>
         </policy>
         <policy id="img-src">
@@ -28,6 +30,7 @@
                 <value id="klarna" type="host">*.klarna.com</value>
                 <value id="klarna_evt" type="host">*.klarnaevt.com</value>
                 <value id="klarna_cdn" type="host">*.klarnacdn.net</value>
+                <value id="kustom_co" type="host">*.kustom.co</value>
             </values>
         </policy>
         <policy id="frame-src">
