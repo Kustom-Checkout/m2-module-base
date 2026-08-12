@@ -11,17 +11,10 @@ namespace Klarna\Base\Plugin\Sales;
 
 use Klarna\Base\Api\OrderRepositoryInterface as KlarnaOrderRepositoryInterface;
 use Magento\Framework\Api\ExtensionAttributesFactory;
-use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface as MagentoOrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
-/**
- * Populating TMS (e.g. Ingrid) shipping option extension attributes (tos_id, carrier, pickup location name,
- * raw selected_shipping_option) onto the Magento sales order from the klarna_core_order entity.
- *
- * @internal
- */
 class OrderRepositoryPlugin
 {
     /**
