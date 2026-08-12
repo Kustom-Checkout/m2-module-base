@@ -97,10 +97,10 @@ class OrderRepositoryPlugin
             $extensionAttributes = $this->extensionAttributesFactory->create(MagentoOrderInterface::class);
         }
 
-        $extensionAttributes->setKlarnaTosId($klarnaOrder->getTosId());
-        $extensionAttributes->setKlarnaShippingCarrier($klarnaOrder->getShippingCarrier());
-        $extensionAttributes->setKlarnaShippingLocationName($klarnaOrder->getShippingLocationName());
-        $extensionAttributes->setKlarnaSelectedShippingOption($klarnaOrder->getSelectedShippingOption());
+        $extensionAttributes->setKustomTosId($klarnaOrder->getTosId());
+        $extensionAttributes->setKustomShippingCarrier($klarnaOrder->getShippingCarrier());
+        $extensionAttributes->setKustomShippingLocationName($klarnaOrder->getShippingLocationName());
+        $extensionAttributes->setKustomSelectedShippingOption($klarnaOrder->getSelectedShippingOption());
 
         $order->setExtensionAttributes($extensionAttributes);
     }
