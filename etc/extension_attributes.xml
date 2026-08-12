@@ -10,10 +10,26 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
-        <attribute code="kustom_tos_id" type="string"/>
-        <attribute code="kustom_shipping_carrier" type="string"/>
-        <attribute code="kustom_shipping_location_name" type="string"/>
-        <attribute code="kustom_selected_shipping_option" type="string"/>
+        <attribute code="kustom_tos_id" type="string">
+            <join reference_table="klarna_core_order" reference_field="order_id" join_on_field="entity_id">
+                <field>tos_id</field>
+            </join>
+        </attribute>
+        <attribute code="kustom_shipping_carrier" type="string">
+            <join reference_table="klarna_core_order" reference_field="order_id" join_on_field="entity_id">
+                <field>shipping_carrier</field>
+            </join>
+        </attribute>
+        <attribute code="kustom_shipping_location_name" type="string">
+            <join reference_table="klarna_core_order" reference_field="order_id" join_on_field="entity_id">
+                <field>shipping_location_name</field>
+            </join>
+        </attribute>
+        <attribute code="kustom_selected_shipping_option" type="string">
+            <join reference_table="klarna_core_order" reference_field="order_id" join_on_field="entity_id">
+                <field>selected_shipping_option</field>
+            </join>
+        </attribute>
     </extension_attributes>
 </config>
 

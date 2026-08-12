@@ -60,24 +60,6 @@ class OrderRepositoryPlugin
         return $order;
     }
 
-    /**
-     * Populate extension attributes after loading a list of orders
-     *
-     * @param OrderRepositoryInterface $subject
-     * @param SearchResultsInterface   $searchResult
-     * @return SearchResultsInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function afterGetList(
-        OrderRepositoryInterface $subject,
-        SearchResultsInterface $searchResult
-    ): SearchResultsInterface {
-        foreach ($searchResult->getItems() as $order) {
-            $this->addExtensionAttributes($order);
-        }
-
-        return $searchResult;
-    }
 
     /**
      * Adding the Kustom shipping option extension attributes to the given order
