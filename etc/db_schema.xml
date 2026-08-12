@@ -27,6 +27,10 @@
         <column name="created_at" xsi:type="timestamp" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
         <column name="authorized_payment_method" xsi:type="varchar" length="255" nullable="false" default="" comment="Authorized payment method"/>
+        <column name="tos_id" xsi:type="varchar" length="255" nullable="true" comment="TMS (e.g. Ingrid) Terms of Service/booking reference for the selected shipping option"/>
+        <column name="shipping_carrier" xsi:type="varchar" length="255" nullable="true" comment="Carrier of the selected shipping option (e.g. Ingrid TMS carrier)"/>
+        <column name="shipping_location_name" xsi:type="varchar" length="255" nullable="true" comment="Name of the selected shipping option's pickup location"/>
+        <column name="selected_shipping_option" xsi:type="text" nullable="true" comment="Raw JSON encoded selected_shipping_option object from the placed Kustom order"/>
 
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>

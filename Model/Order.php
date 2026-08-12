@@ -176,6 +176,74 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface, 
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setTosId(?string $tosId): OrderInterface
+    {
+        $this->setData('tos_id', $tosId);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTosId(): ?string
+    {
+        return $this->_getData('tos_id');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingCarrier(?string $carrier): OrderInterface
+    {
+        $this->setData('shipping_carrier', $carrier);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingCarrier(): ?string
+    {
+        return $this->_getData('shipping_carrier');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingLocationName(?string $locationName): OrderInterface
+    {
+        $this->setData('shipping_location_name', $locationName);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingLocationName(): ?string
+    {
+        return $this->_getData('shipping_location_name');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSelectedShippingOption(?string $selectedShippingOption): OrderInterface
+    {
+        $this->setData('selected_shipping_option', $selectedShippingOption);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSelectedShippingOption(): ?string
+    {
+        return $this->_getData('selected_shipping_option');
+    }
+
+    /**
      * Constructor
      *
      * @codeCoverageIgnore

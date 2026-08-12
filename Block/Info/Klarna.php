@@ -94,6 +94,9 @@ class Klarna extends Info
         $result->unsetData((string)__('Merchant Portal'));
         $result->unsetData((string)__('Logs'));
         $result->unsetData((string)__('Authorized Payment Method'));
+        $result->unsetData((string)__('TOS ID'));
+        $result->unsetData((string)__('Shipping Carrier'));
+        $result->unsetData((string)__('Pickup Location'));
 
         return $result->getData();
     }
@@ -131,6 +134,7 @@ class Klarna extends Info
                 $this->addMerchantPortalLinkToDisplay($transport, $order, $this->klarnaOrder);
                 $this->addLogLinkToDisplay($transport, $this->klarnaOrder);
                 $this->addAuthorizedPaymentMethodToDisplay($transport, $this->klarnaOrder);
+                $this->addShippingOptionToDisplay($transport, $this->klarnaOrder);
             }
         } catch (NoSuchEntityException $e) {
             $transport->setData((string)__('Error'), $e->getMessage());
@@ -282,6 +286,38 @@ class Klarna extends Info
                 (string)__('Authorized Payment Method'),
                 strtoupper($klarnaOrder->getAuthorizedPaymentMethod())
             );
+        }
+    }
+
+    /**
+     * Add TMS (e.g. Ingrid) shipping option details (TOS ID, carrier, pickup location) to order view
+     *
+     * @param DataObject $transport
+     * @param OrderInterface $klarnaOrder
+     *
+     * @return void
+     *
+     * @throws LocalizedException
+     */
+    private function addShippingOptionToDisplay(
+        DataObject $transport,
+        OrderInterface $klarnaOrder
+    ): void {
+        //get only in admin
+        if ($this->appState->getAreaCode() !== Area::AREA_ADMINHTML) {
+            return;
+        }
+
+        if ($klarnaOrder->getTosId()) {
+            $transport->setData((string)__('TOS ID'), $klarnaOrder->getTosId());
+        }
+
+        if ($klarnaOrder->getShippingCarrier()) {
+            $transport->setData((string)__('Shipping Carrier'), $klarnaOrder->getShippingCarrier());
+        }
+
+        if ($klarnaOrder->getShippingLocationName()) {
+            $transport->setData((string)__('Pickup Location'), $klarnaOrder->getShippingLocationName());
         }
     }
 }

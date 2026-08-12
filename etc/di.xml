@@ -63,6 +63,13 @@
     <preference for="Klarna\Base\Api\OrderInterface" type="Klarna\Base\Model\Order" />
     <preference for="Klarna\Base\Api\OrderRepositoryInterface" type="Klarna\Base\Model\OrderRepository" />
 
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin
+            sortOrder="10"
+            name="klarnaBaseSalesOrderRepository"
+            type="Klarna\Base\Plugin\Sales\OrderRepositoryPlugin"/>
+    </type>
+
     <!-- Sensitive and environment settings -->
     <type name="Magento\Config\Model\Config\TypePool">
         <arguments>
