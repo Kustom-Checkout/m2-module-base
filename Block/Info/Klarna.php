@@ -11,7 +11,6 @@ namespace Klarna\Base\Block\Info;
 
 use Klarna\Base\Model\System\MerchantPortal;
 use Klarna\Base\Model\OrderRepository;
-use Magento\Framework\App\Area;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
@@ -44,10 +43,6 @@ class Klarna extends Info
      */
     private $merchantPortal;
     /**
-     * @var State
-     */
-    private $appState;
-    /**
      * @var UrlInterface
      */
     private $urlBuilder;
@@ -55,6 +50,10 @@ class Klarna extends Info
      * @var OrderInterface
      */
     private $klarnaOrder;
+    /**
+     * @var bool
+     */
+    private $isAdminArea = true;
 
     /**
      * @param Context           $context
@@ -80,7 +79,6 @@ class Klarna extends Info
         $this->merchantPortal    = $merchantPortal;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->urlBuilder        = $urlBuilder;
-        $this->appState          = $context->getAppState();
     }
 
     /**
@@ -90,13 +88,8 @@ class Klarna extends Info
      */
     public function getSpecificInformation(): array
     {
+        $this->isAdminArea = false;
         $result = $this->getDisplayedInformation();
-        $result->unsetData((string)__('Merchant Portal'));
-        $result->unsetData((string)__('Logs'));
-        $result->unsetData((string)__('Authorized Payment Method'));
-        $result->unsetData((string)__('TOS ID'));
-        $result->unsetData((string)__('Shipping Carrier'));
-        $result->unsetData((string)__('Pickup Location'));
 
         return $result->getData();
     }
@@ -178,14 +171,15 @@ class Klarna extends Info
         OrderInterface $klarnaOrder
     ) {
         //get merchant link only in admin
-        if ($this->appState->getAreaCode() === Area::AREA_ADMINHTML) {
-            $merchantPortalLink = $this->merchantPortal->getOrderMerchantPortalLink($order, $klarnaOrder);
-            if ($merchantPortalLink) {
-                $transport->setData(
-                    (string)__('Merchant Portal'),
-                    $this->merchantPortal->getOrderMerchantPortalLink($order, $klarnaOrder)
-                );
-            }
+        if (!$this->isAdminArea) {
+            return;
+        }
+        $merchantPortalLink = $this->merchantPortal->getOrderMerchantPortalLink($order, $klarnaOrder);
+        if ($merchantPortalLink) {
+            $transport->setData(
+                (string)__('Merchant Portal'),
+                $this->merchantPortal->getOrderMerchantPortalLink($order, $klarnaOrder)
+            );
         }
     }
 
@@ -200,16 +194,17 @@ class Klarna extends Info
         DataObject $transport,
         OrderInterface $klarnaOrder
     ) {
-        //get link only in admin
-        if ($this->appState->getAreaCode() === Area::AREA_ADMINHTML) {
-            $url = $this->urlBuilder->getUrl('klarna/index/logs', [
-                'klarna_id' => $klarnaOrder->getSessionId() ?: $klarnaOrder->getKlarnaOrderId()
-            ]);
-            $transport->setData(
-                (string)__('Logs'),
-                $url
-            );
+        //Get link only in admin
+        if (!$this->isAdminArea) {
+            return;
         }
+        $url = $this->urlBuilder->getUrl('klarna/index/logs', [
+            'klarna_id' => $klarnaOrder->getSessionId() ?: $klarnaOrder->getKlarnaOrderId()
+        ]);
+        $transport->setData(
+            (string)__('Logs'),
+            $url
+        );
     }
 
     /**
@@ -279,14 +274,13 @@ class Klarna extends Info
         OrderInterface $klarnaOrder
     ): void {
         //get only in admin
-        if ($this->appState->getAreaCode() === Area::AREA_ADMINHTML &&
-            $klarnaOrder->getAuthorizedPaymentMethod()
-        ) {
-            $transport->setData(
-                (string)__('Authorized Payment Method'),
-                strtoupper($klarnaOrder->getAuthorizedPaymentMethod())
-            );
+        if (!$this->isAdminArea || !$klarnaOrder->getAuthorizedPaymentMethod()) {
+            return;
         }
+        $transport->setData(
+            (string)__('Authorized Payment Method'),
+            strtoupper($klarnaOrder->getAuthorizedPaymentMethod())
+        );
     }
 
     /**
@@ -304,7 +298,7 @@ class Klarna extends Info
         OrderInterface $klarnaOrder
     ): void {
         //get only in admin
-        if ($this->appState->getAreaCode() !== Area::AREA_ADMINHTML) {
+        if (!$this->isAdminArea) {
             return;
         }
 
