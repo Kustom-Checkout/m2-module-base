@@ -4,7 +4,8 @@
 
 ### Breaking changes
 
-* None
+* KUSTOM-89: OrderInterface updated and deprecated classes
+  `OrderAuthorizedPaymentMethodInterface` and `Helper/KlarnaConfig.php` removed
 
 ### Features / changes
 

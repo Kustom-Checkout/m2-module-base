@@ -104,6 +104,20 @@ interface OrderInterface
     public function getIsAcknowledged();
 
     /**
+     * Setting the MID
+     *
+     * @param string $mid
+     */
+    public function setUsedMid(string $mid): self;
+
+    /**
+     * Getting back the MID
+     *
+     * @return string|null
+     */
+    public function getUsedMid(): ?string;
+
+    /**
      * Setting the is_b2b flag
      *
      * @param bool $flag
@@ -118,18 +132,18 @@ interface OrderInterface
     public function isB2b(): bool;
 
     /**
-     * Setting the MID
+     * Set authorized payment method type
      *
-     * @param string $mid
+     * @param string $authorizedPaymentMethod
      */
-    public function setUsedMid(string $mid): self;
+    public function setAuthorizedPaymentMethod(string $authorizedPaymentMethod): self;
 
     /**
-     * Getting back the MID
+     * Get authorized payment method type
      *
-     * @return string|null
+     * @return string
      */
-    public function getUsedMid(): ?string;
+    public function getAuthorizedPaymentMethod(): string;
 
     /**
      * Setting the TMS (e.g. Ingrid) TOS ID for the selected shipping option
