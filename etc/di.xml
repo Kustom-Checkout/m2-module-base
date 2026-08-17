@@ -54,11 +54,6 @@
             <argument name="log" xsi:type="object">Klarna\Logger\Model\Logger</argument>
         </arguments>
     </type>
-    <type name="Klarna\Base\Helper\KlarnaConfig">
-        <arguments>
-            <argument name="config" xsi:type="object">Klarna\Base\Config\Virtual</argument>
-        </arguments>
-    </type>
     <preference for="Klarna\Base\Api\ServiceInterface" type="Klarna\Base\Model\Api\Rest\Service" />
     <preference for="Klarna\Base\Api\OrderInterface" type="Klarna\Base\Model\Order" />
     <preference for="Klarna\Base\Api\OrderRepositoryInterface" type="Klarna\Base\Model\OrderRepository" />
