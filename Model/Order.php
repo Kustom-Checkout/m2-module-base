@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Klarna\Base\Model;
 
-use Klarna\Base\Api\OrderAuthorizedPaymentMethodInterface;
 use Klarna\Base\Api\OrderInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
@@ -17,7 +16,7 @@ use Magento\Framework\Model\AbstractModel;
 /**
  * @internal
  */
-class Order extends AbstractModel implements OrderInterface, IdentityInterface, OrderAuthorizedPaymentMethodInterface
+class Order extends AbstractModel implements OrderInterface, IdentityInterface
 {
     public const CACHE_TAG = 'klarna_core_order';
 
