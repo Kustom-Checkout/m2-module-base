@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -130,4 +130,64 @@ interface OrderInterface
      * @return string|null
      */
     public function getUsedMid(): ?string;
+
+    /**
+     * Setting the TMS (e.g. Ingrid) TOS ID for the selected shipping option
+     *
+     * @param string|null $tosId
+     * @return $this
+     */
+    public function setTosId(?string $tosId): self;
+
+    /**
+     * Getting back the TMS TOS ID
+     *
+     * @return string|null
+     */
+    public function getTosId(): ?string;
+
+    /**
+     * Setting the carrier of the selected shipping option
+     *
+     * @param string|null $carrier
+     * @return $this
+     */
+    public function setShippingCarrier(?string $carrier): self;
+
+    /**
+     * Getting back the carrier of the selected shipping option
+     *
+     * @return string|null
+     */
+    public function getShippingCarrier(): ?string;
+
+    /**
+     * Setting the name of the selected shipping option's pickup location
+     *
+     * @param string|null $locationName
+     * @return $this
+     */
+    public function setShippingLocationName(?string $locationName): self;
+
+    /**
+     * Getting back the name of the selected shipping option's pickup location
+     *
+     * @return string|null
+     */
+    public function getShippingLocationName(): ?string;
+
+    /**
+     * Setting the raw JSON encoded selected_shipping_option object
+     *
+     * @param string|null $selectedShippingOption
+     * @return $this
+     */
+    public function setSelectedShippingOption(?string $selectedShippingOption): self;
+
+    /**
+     * Getting back the raw JSON encoded selected_shipping_option object
+     *
+     * @return string|null
+     */
+    public function getSelectedShippingOption(): ?string;
 }

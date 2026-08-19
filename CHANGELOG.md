@@ -1,5 +1,21 @@
 # Changelog
 
+## 11.2.0 / 2026-08-12
+
+### Breaking changes
+
+* None
+
+### Features / changes
+
+* KUSTOM-89: Added `tos_id`, `shipping_carrier`, `shipping_location_name` and `selected_shipping_option`
+  columns to `klarna_core_order` to store TMS (e.g. Ingrid) shipping option data from the placed Kustom
+  order, and exposed them in the admin order payment info section.
+
+### Fixes
+
+* None
+
 ## 11.1.1 / 2026-08-12
 
 ### Breaking changes

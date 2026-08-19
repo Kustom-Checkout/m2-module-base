@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -173,6 +173,74 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface, 
     {
         $this->setData('authorized_payment_method', $authorizedPaymentMethod);
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTosId(?string $tosId): OrderInterface
+    {
+        $this->setData('tos_id', $tosId);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTosId(): ?string
+    {
+        return $this->_getData('tos_id');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingCarrier(?string $carrier): OrderInterface
+    {
+        $this->setData('shipping_carrier', $carrier);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingCarrier(): ?string
+    {
+        return $this->_getData('shipping_carrier');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingLocationName(?string $locationName): OrderInterface
+    {
+        $this->setData('shipping_location_name', $locationName);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingLocationName(): ?string
+    {
+        return $this->_getData('shipping_location_name');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSelectedShippingOption(?string $selectedShippingOption): OrderInterface
+    {
+        $this->setData('selected_shipping_option', $selectedShippingOption);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSelectedShippingOption(): ?string
+    {
+        return $this->_getData('selected_shipping_option');
     }
 
     /**

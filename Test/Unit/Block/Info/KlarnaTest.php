@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Magento\Framework\DataObjectFactory;
 use Klarna\Base\Model\Order as KlarnaOrder;
 use Magento\Sales\Model\Order as MageOrder;
-use Magento\Framework\App\State;
 use Magento\Framework\View\Element\Template\Context;
 
 /**
@@ -40,7 +39,7 @@ class KlarnaTest extends TestCase
 
     public function testGetLogoUrlReturnsCorrectUrl(): void
     {
-        $this->setUpKlarna('adminhtml');
+        $this->setUpKlarna();
 
         $expected = 'https://cdn.kustom.co/assets/badges/kustom_logo_black.png';
         $result = $this->klarna->getLogoUrl();
@@ -48,19 +47,62 @@ class KlarnaTest extends TestCase
         static::assertEquals($expected, $result);
     }
 
-    public function testGetFullSpecificInformationWrongAreaNotContainsLogLink(): void
+    /**
+     * getSpecificInformation() is the non-admin (e.g. invoice PDF) path — it sets
+     * isAdminArea = false internally, so admin-only fields must be absent.
+     */
+    public function testGetSpecificInformationDoesNotContainLogLink(): void
     {
-        $this->setUpKlarna('frontend');
+        $this->setUpKlarna();
 
         $this->setUpLogLinkTest('session_id', 'klarna_order_id');
-        $result = $this->klarna->getFullSpecificInformation();
+        $result = $this->klarna->getSpecificInformation();
 
         static::assertFalse(isset($result['Logs']));
     }
 
+    public function testGetSpecificInformationDoesNotContainAuthorizedPaymentMethod(): void
+    {
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $result = $this->klarna->getSpecificInformation();
+
+        static::assertFalse(isset($result['Authorized Payment Method']));
+    }
+
+    public function testGetSpecificInformationDoesNotContainShippingOptionDetails(): void
+    {
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $result = $this->klarna->getSpecificInformation();
+
+        static::assertFalse(isset($result['TOS ID']));
+        static::assertFalse(isset($result['Shipping Carrier']));
+        static::assertFalse(isset($result['Pickup Location']));
+    }
+
+    public function testGetSpecificInformationDoesNotContainMerchantPortalLink(): void
+    {
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $this->dependencyMocks['merchantPortal']
+            ->method('getOrderMerchantPortalLink')
+            ->willReturn('https://portal.klarna.com/some-link');
+        $result = $this->klarna->getSpecificInformation();
+
+        static::assertFalse(isset($result['Merchant Portal']));
+    }
+
+    /**
+     * getFullSpecificInformation() is the admin path — isAdminArea stays at its
+     * default (true), so admin-only fields must be present.
+     */
     public function testGetFullSpecificInformationContainsSessionLogLink(): void
     {
-        $this->setUpKlarna('adminhtml');
+        $this->setUpKlarna();
 
         $this->setUpLogLinkTest('session_id', 'klarna_order_id');
         $result = $this->klarna->getFullSpecificInformation();
@@ -70,7 +112,7 @@ class KlarnaTest extends TestCase
 
     public function testGetFullSpecificInformationContainsKlarnaOrderLogLink(): void
     {
-        $this->setUpKlarna('adminhtml');
+        $this->setUpKlarna();
 
         $this->setUpLogLinkTest(null, 'klarna_order_id');
         $result = $this->klarna->getFullSpecificInformation();
@@ -78,9 +120,9 @@ class KlarnaTest extends TestCase
         static::assertSame('klarna/index/logs::klarna_order_id', $result['Logs']);
     }
 
-    public function testAdminGetFullSpecificInformationContainsAuthorizedPaymentMethod(): void
+    public function testGetFullSpecificInformationContainsAuthorizedPaymentMethod(): void
     {
-        $this->setUpKlarna('adminhtml');
+        $this->setUpKlarna();
 
         $this->setUpLogLinkTest('session_id', 'klarna_order_id');
         $result = $this->klarna->getFullSpecificInformation();
@@ -88,22 +130,58 @@ class KlarnaTest extends TestCase
         static::assertSame('DIRECT_DEBIT', $result['Authorized Payment Method']);
     }
 
-    public function testFrontFullSpecificInformationDoesNotContainsAuthorizedPaymentMethod(): void
+    public function testGetFullSpecificInformationDoesNotContainAuthorizedPaymentMethodWhenAbsent(): void
     {
-        $this->setUpKlarna('frontend');
+        $this->setUpKlarna();
 
-        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id', '');
         $result = $this->klarna->getFullSpecificInformation();
 
         static::assertFalse(isset($result['Authorized Payment Method']));
     }
 
-    private function setUpLogLinkTest($sessionId, $klarnaOrderId): void
+    public function testGetFullSpecificInformationContainsShippingOptionDetails(): void
     {
-        $klarnaOrder = $this->mockFactory->create(KlarnaOrder::class);
-        $klarnaOrder
-            ->method('getId')
-            ->willReturn(1);
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $result = $this->klarna->getFullSpecificInformation();
+
+        static::assertSame('tos-id-123', $result['TOS ID']);
+        static::assertSame('ingrid', $result['Shipping Carrier']);
+        static::assertFalse(isset($result['Pickup Location']));
+    }
+
+    public function testGetFullSpecificInformationContainsMerchantPortalLinkWhenAvailable(): void
+    {
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $this->dependencyMocks['merchantPortal']
+            ->method('getOrderMerchantPortalLink')
+            ->willReturn('https://portal.klarna.com/some-link');
+        $result = $this->klarna->getFullSpecificInformation();
+
+        static::assertSame('https://portal.klarna.com/some-link', $result['Merchant Portal']);
+    }
+
+    public function testGetFullSpecificInformationDoesNotContainMerchantPortalLinkWhenUnavailable(): void
+    {
+        $this->setUpKlarna();
+
+        $this->setUpLogLinkTest('session_id', 'klarna_order_id');
+        $this->dependencyMocks['merchantPortal']
+            ->method('getOrderMerchantPortalLink')
+            ->willReturn('');
+        $result = $this->klarna->getFullSpecificInformation();
+
+        static::assertFalse(isset($result['Merchant Portal']));
+    }
+
+    private function setUpLogLinkTest($sessionId, $klarnaOrderId, $authorizedPaymentMethod = 'direct_debit'): void
+    {
+        $klarnaOrder = $this->buildKlarnaOrderMock($sessionId, $klarnaOrderId, $authorizedPaymentMethod);
+
         $mageOrder = $this->mockFactory->create(MageOrder::class);
         $mageOrder
             ->method('getInvoiceCollection')
@@ -128,7 +206,18 @@ class KlarnaTest extends TestCase
             ->willReturnCallback(function ($routePath, $routeParams) {
                 return sprintf('%s::%s', $routePath, $routeParams['klarna_id']);
             });
+    }
 
+    /**
+     * Builds a Klarna order mock with sensible defaults for id/reservation/shipping,
+     * letting individual tests vary the session id, order id, and payment method.
+     */
+    private function buildKlarnaOrderMock($sessionId, $klarnaOrderId, $authorizedPaymentMethod)
+    {
+        $klarnaOrder = $this->mockFactory->create(KlarnaOrder::class);
+        $klarnaOrder
+            ->method('getId')
+            ->willReturn(1);
         $klarnaOrder
             ->method('getSessionId')
             ->willReturn($sessionId);
@@ -137,32 +226,28 @@ class KlarnaTest extends TestCase
             ->willReturn($klarnaOrderId);
         $klarnaOrder
             ->method('getAuthorizedPaymentMethod')
-            ->willReturn('direct_debit');
+            ->willReturn($authorizedPaymentMethod);
+        $klarnaOrder
+            ->method('getTosId')
+            ->willReturn('tos-id-123');
+        $klarnaOrder
+            ->method('getShippingCarrier')
+            ->willReturn('ingrid');
+        $klarnaOrder
+            ->method('getShippingLocationName')
+            ->willReturn(null);
+
+        return $klarnaOrder;
     }
 
-    /**
-     * Context/app state/area code need to be set before instance creation, otherwise
-     * $context->getAppState() in the constructor returns null
-     *
-     * @param string $areaCode
-     */
-    private function setUpKlarna(string $areaCode): void
+    private function setUpKlarna(): void
     {
-        $context = $this->mockFactory->create(Context::class);
-        $appState = $this->mockFactory->create(State::class);
-        $appState
-            ->method('getAreaCode')
-            ->willReturn($areaCode);
-        $context
-            ->method('getAppState')
-            ->willReturn($appState);
-
         $objectFactory = new TestObjectFactory('');
         $this->klarna = $objectFactory->create(
             Klarna::class,
             [],
             [
-                Context::class => $context
+                Context::class => $this->mockFactory->create(Context::class)
             ]
         );
         $this->dependencyMocks = $objectFactory->getDependencyMocks();

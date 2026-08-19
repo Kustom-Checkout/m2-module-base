@@ -13,7 +13,11 @@
             "is_b2b": true,
             "created_at": true,
             "updated_at": true,
-            "authorized_payment_method": true
+            "authorized_payment_method": true,
+            "tos_id": true,
+            "shipping_carrier": true,
+            "shipping_location_name": true,
+            "selected_shipping_option": true
         },
         "index": {
             "KLARNA_CORE_ORDER_IS_ACKNOWLEDGED": true,
