@@ -71,5 +71,23 @@
             </argument>
         </arguments>
     </type>
+    <!--
+        Preventing Magento\PaymentServicesPaypal\Model\CancellationService from masking order placement exceptions
+        with "No such entity with cartId = X" and from cancelling Kustom orders. See KUSTOM-102.
+    -->
+    <type name="Magento\PaymentServicesPaypal\Model\CancellationService">
+        <plugin name="klarna_base_payment_services_cancellation_guard"
+                type="Klarna\Base\Plugin\PaymentServicesPaypal\CancellationServiceGuard"
+                sortOrder="10"/>
+    </type>
+    <type name="Klarna\Base\Plugin\PaymentServicesPaypal\CancellationServiceGuard">
+        <arguments>
+            <argument name="methodCodes" xsi:type="array">
+                <item name="kco" xsi:type="string">klarna_kco</item>
+                <item name="kp" xsi:type="string">klarna_kp</item>
+                <item name="one_klarna" xsi:type="string">klarna</item>
+            </argument>
+        </arguments>
+    </type>
 
 </config>
