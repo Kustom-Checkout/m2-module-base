@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright 2025 Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -104,7 +104,7 @@ class FieldsTest extends TestCase
             ],
             'postcode' => '10101',
             'city' => 'BE',
-            'region_id' => 0,
+            'region_id' => null,
             'region' => 'BE',
             'telephone' => '+491111111111',
             'country_id' => 'DE',
@@ -147,7 +147,7 @@ class FieldsTest extends TestCase
             ],
             'postcode' => '10101',
             'city' => 'BE',
-            'region_id' => 0,
+            'region_id' => null,
             'region' => 'BE',
             'telephone' => '+491111111111',
             'country_id' => 'DE',
