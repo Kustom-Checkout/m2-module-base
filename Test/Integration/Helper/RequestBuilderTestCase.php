@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Klarna\Base\Test\Integration\Helper;
 
 use Klarna\Backend\Model\Api\Builder;
-use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
