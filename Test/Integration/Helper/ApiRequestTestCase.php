@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright 2025 Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Klarna\Base\Test\Integration\Helper;
 
-use Klarna\Kp\Model\Initialization\Action;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use Klarna\Base\Test\Integration\Helper\DataProvider;
