@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright 2025 Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace Klarna\Base\Test\Integration\Helper;
 
-use Klarna\Kp\Model\Initialization\Action;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
-use Klarna\Base\Test\Integration\Helper\DataProvider;
 use Magento\Checkout\Model\Session as MagentoSession;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
@@ -33,10 +31,6 @@ class ApiRequestTestCase extends TestCase
      * @var ProductRepositoryInterface
      */
     protected $productRepository;
-    /**
-     * @var DataProvider
-     */
-    protected $dataProvider;
     /**
      * @var ConfigInterface
      */
@@ -61,7 +55,6 @@ class ApiRequestTestCase extends TestCase
         $this->objectManager = Bootstrap::getObjectManager();
         $this->session = $this->objectManager->get(MagentoSession::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
-        $this->dataProvider = $this->objectManager->get(DataProvider::class);
         $this->configWriter = $this->objectManager->get(ConfigInterface::class);
         $this->encryptor = $this->objectManager->get(EncryptorInterface::class);
         $this->cacheManager = $this->objectManager->get(Manager::class);

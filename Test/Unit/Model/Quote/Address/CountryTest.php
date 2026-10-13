@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright 2025 Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -9,7 +9,6 @@
 namespace Klarna\Base\Test\Unit\Model\Quote\Address;
 
 use Klarna\Base\Model\Quote\Address\Country;
-use Klarna\Kp\Model\Api\Request\Builder;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Store\Model\Store;
@@ -26,10 +25,6 @@ class CountryTest extends TestCase
      * @var Country
      */
     private Country $model;
-    /**
-     * @var Builder
-     */
-    private Builder $requestBuilder;
     /**
      * @var Quote
      */
@@ -184,8 +179,6 @@ class CountryTest extends TestCase
     protected function setUp(): void
     {
         $this->model = parent::setUpMocks(Country::class);
-
-        $this->requestBuilder = $this->mockFactory->create(Builder::class);
         $this->quote = $this->mockFactory->create(Quote::class);
 
         $this->billingAddress = $this->mockFactory->create(Address::class);

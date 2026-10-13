@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright 2025 Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace Klarna\Base\Test\Integration\Helper;
 
 use Klarna\Backend\Model\Api\Builder;
-use Klarna\Kp\Model\Api\Builder\Request;
-use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
@@ -26,11 +24,6 @@ use Magento\Sales\Model\Order\CreditmemoFactory;
  */
 class RequestBuilderTestCase extends GenericTestCase
 {
-    /**
-     * @var Request
-     */
-    public $requestBuilder;
-
     public $invoiceCollection;
 
     public $creditmemoCollection;
@@ -53,7 +46,6 @@ class RequestBuilderTestCase extends GenericTestCase
     {
         parent::setUp();
 
-        $this->requestBuilder = $this->objectManager->get(Request::class);
         $this->invoiceCollection = $this->objectManager->get(InvoiceCollectionFactory::class);
         $this->creditmemoCollection = $this->objectManager->get(CreditmemoCollectionFactory::class);
         $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
@@ -61,39 +53,6 @@ class RequestBuilderTestCase extends GenericTestCase
         $this->orderManagementBuilder = $this->objectManager->get(Builder::class);
         $this->creditmemoFactory = $this->objectManager->get(CreditmemoFactory::class);
         $this->quotePreparer = $this->objectManager->get(QuotePreparer::class);
-    }
-
-    protected function getPlaceOrderRequest($quote, string $currency, AddressInterface $address, string $shippingMethod = '')
-    {
-        $this->quotePreparer->configureQuote($quote, $currency, $address, $address, $shippingMethod);
-        $this->quotePreparer->saveQuote($quote);
-
-        return $this
-            ->requestBuilder
-            ->generatePlaceOrderRequest($quote, 'a-random-auth-callback-token')
-            ->toArray();
-    }
-
-    protected function getCreateSessionRequest($quote, string $currency, AddressInterface $address, string $shippingMethod = ''): array
-    {
-        $this->quotePreparer->configureQuote($quote, $currency, $address, $address, $shippingMethod);
-        $this->quotePreparer->saveQuote($quote);
-
-        return $this
-            ->requestBuilder
-            ->generateCreateSessionRequest($quote, 'a-random-auth-callback-token')
-            ->toArray();
-    }
-
-    protected function getCreateSessionRequestNoAuthToken($quote, string $currency, AddressInterface $address, string $shippingMethod = ''): array
-    {
-        $this->quotePreparer->configureQuote($quote, $currency, $address, $address, $shippingMethod);
-        $this->quotePreparer->saveQuote($quote);
-
-        return $this
-            ->requestBuilder
-            ->generateCreateSessionRequest($quote, null)
-            ->toArray();
     }
 
     protected function getCaptureRequest(float $amount, InvoiceInterface $invoice): array
