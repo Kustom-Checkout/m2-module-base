@@ -1,5 +1,16 @@
 # Changelog
 
+## 12.0.0-p1 / 2026-11-09
+
+### Breaking changes
+* None
+
+### Features / changes
+* None
+
+### Fixes
+* KUSTOM-124: Passed the discount tax compensation of the invoice and credit memo item to the order lines
+
 ## 12.0.0 / 2026-08-19
 
 ### Breaking changes
