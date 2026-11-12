@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Klarna Bank AB (publ)
+ * Copyright © Kustom AB (Originally developed by Klarna Bank AB)
  *
  * For the full copyright and license information, please view the NOTICE
  * and LICENSE files that were distributed with this source code.
@@ -129,6 +129,9 @@ class OrderLineProcessor
             $orderItem->setCurrentInvoiceRefundItemBaseRowTotalInclTax($item->getBaseRowTotalInclTax());
             $orderItem->setCurrentInvoiceRefundItemBaseTaxAmount($item->getBaseTaxAmount());
             $orderItem->setCurrentInvoiceRefundItemBaseDiscountAmount($item->getBaseDiscountAmount());
+            $orderItem->setCurrentInvoiceRefundItemBaseDiscountTaxCompensationAmount(
+                $item->getBaseDiscountTaxCompensationAmount()
+            );
             $items[] = $orderItem;
         }
         return $items;
